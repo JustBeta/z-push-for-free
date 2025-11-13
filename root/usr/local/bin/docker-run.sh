@@ -10,14 +10,6 @@ chown -R zpush:zpush /state /usr/local/lib/z-push /var/log/z-push
 cp /etc/supervisord.conf.dist /etc/supervisord.conf
 [ "$DEBUG" = 1 ] && sed -i "|z-push-error.log|z-push-error.log /var/log/z-push/z-push.log|" /etc/supervisord.conf
 
-#mkdir -p /etc/z-push
-#cp config/z-push.conf.php /etc/z-push/z-push.conf.php
-#cp backend/imap/config/imap.conf.php /etc/z-push/imap.conf.php
-## cp autodiscover.conf.php  autodiscover.conf.php # si tu utilises autodiscover
-## cp default.conf.php default.conf.php # configuration par défaut commune à tous les backends
-#cp /usr/local/lib/z-push/backend/imap/config.php /etc/z-push/config.php
-#cp /usr/local/lib/z-push/backend/imap/imap.php /etc/z-push/imap.php
-
 # selection du BackEnd
 sed -e "s/define('BACKEND_PROVIDER', '')/define('BACKEND_PROVIDER', 'BackendIMAP')/" \
     -e "s|define('STATE_DIR', '/var/lib/z-push/')|define('STATE_DIR', '/state/')|" \
@@ -68,7 +60,7 @@ echo "==========================================================================
 
 echo "*************************BEGIN* imap.php *BEGIN******************************"
 echo "==============================================================================="
-cat /usr/local/lib/z-push/backend/imap/config.php
+#cat /usr/local/lib/z-push/backend/imap/config.php
 grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/backend/imap/config.php" | \
 sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
 sed -E "s/[\"']//g"
