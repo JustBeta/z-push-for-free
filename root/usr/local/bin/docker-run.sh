@@ -5,7 +5,7 @@
 mkdir -p /state /var/log/z-push
 touch /var/log/z-push/z-push-error.log /var/log/z-push/z-push.log
 
-chown -R zpush:zpush /state /opt/zpush /var/log/z-push
+chown -R zpush:zpush /state /usr/local/lib/z-push /var/log/z-push
 
 cp /etc/supervisord.conf.dist /etc/supervisord.conf
 [ "$DEBUG" = 1 ] && sed -i "|z-push-error.log|z-push-error.log /var/log/z-push/z-push.log|" /etc/supervisord.conf
