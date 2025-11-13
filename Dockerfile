@@ -22,7 +22,8 @@ ENV TIMEZONE='Europe/Paris' \
   IMAP_OPTIONS=/ssl/norsh/novalidate-cert \
   SMTP_SERVER='smtp.free.fr' \
   SMTP_PORT='25' \
-  USE_X_FORWARDED_FOR_HEADER=true
+  USE_X_FORWARDED_FOR_HEADER=true \
+  ZPUSH_HOST='zpush.jobar.fr'
   
 #ADD root /
 
@@ -71,6 +72,7 @@ RUN mkdir -p /usr/local/lib/z-push/ /var/log/z-push \
   && cp -r /tmp/Z-Push-2.7.6/src/* /usr/local/lib/z-push/ \
   && mv /usr/local/lib/z-push/config.php /usr/local/lib/z-push/config.php.dist \
   && mv /usr/local/lib/z-push/backend/imap/config.php /usr/local/lib/z-push/backend/imap/config.php.dist \
+  && mv /usr/local/lib/z-push/autodiscover/config.php /usr/local/lib/z-push/autodiscover/config.php.dist \  
   && rm -r -f /tmp/* \
   && chmod 755 /usr/local/bin/docker-run.sh \
   && sed -i '/pkg_resources/d' /usr/lib/python3.12/site-packages/supervisor/options.py
@@ -82,3 +84,5 @@ EXPOSE 80
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD /usr/local/bin/docker-run.sh
+#CMD /usr/bin/tail -f /dev/null
+#z-push-2.7.6
