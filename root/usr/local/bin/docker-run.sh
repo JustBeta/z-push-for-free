@@ -67,6 +67,15 @@ sed -E "s/[\"']//g"
 echo "***************************END* imap.php *END********************************"
 echo "==============================================================================="
 
+echo "***********************BEGIN* autodiscovery *BEGIN****************************"
+echo "==============================================================================="
+#cat /usr/local/lib/z-push/autodiscover/config.php
+grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/autodiscover/config.php" | \
+sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
+sed -E "s/[\"']//g"
+echo "*************************END* autodiscovery *END******************************"
+echo "==============================================================================="
+
 # run application
 echo "Starting supervisord..."
 /usr/bin/supervisord -c /etc/supervisord.conf
