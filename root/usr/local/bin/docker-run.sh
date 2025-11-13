@@ -18,11 +18,13 @@ cp /etc/supervisord.conf.dist /etc/supervisord.conf
 #cp /usr/local/lib/z-push/backend/imap/config.php /etc/z-push/config.php
 #cp /usr/local/lib/z-push/backend/imap/imap.php /etc/z-push/imap.php
 
+# selection du BackEnd
 sed -e "s/define('BACKEND_PROVIDER', '')/define('BACKEND_PROVIDER', 'BackendIMAP')/" \
     -e "s|define('STATE_DIR', '/var/lib/z-push/')|define('STATE_DIR', '/state/')|" \
     -e "s|define('USE_X_FORWARDED_FOR_HEADER', false)|define('USE_X_FORWARDED_FOR_HEADER', "$USE_X_FORWARDED_FOR_HEADER")|" \
     -e "s|define('TIMEZONE', '')|define('TIMEZONE', '"$TIMEZONE"')|" /usr/local/lib/z-push/config.php.dist > /usr/local/lib/z-push/config.php
 
+# parametrage de l'IMAP/SMTP
 sed -e "s/define('IMAP_SERVER', 'localhost')/define('IMAP_SERVER', '"$IMAP_SERVER"')/" \
     -e "s/define('IMAP_PORT', 143)/define('IMAP_PORT', '"$IMAP_PORT"')/" \
     -e "s|define('IMAP_OPTIONS', '/notls/norsh')|define('IMAP_OPTIONS', '"$IMAP_OPTIONS"')|" \
@@ -41,6 +43,12 @@ sed -e "s/define('IMAP_SERVER', 'localhost')/define('IMAP_SERVER', '"$IMAP_SERVE
     -e "s|imap_smtp_params = array()|imap_smtp_params = array('host' => '"$SMTP_SERVER"', 'port' => '"$SMTP_PORT"')|" \
     -e "s/define('IMAP_FOLDER_CONFIGURED', false)/define('IMAP_FOLDER_CONFIGURED', true)/" /usr/local/lib/z-push/backend/imap/config.php.dist > /usr/local/lib/z-push/backend/imap/config.php
 
+# parametrage de l'autoddiscover
+sed -e "s/\/\/ define('ZPUSH_HOST', 'zpush.example.com')/define('ZPUSH_HOST', '"$ZPUSH_HOST"')/" \
+    -e "s|define('USE_FULLEMAIL_FOR_LOGIN', false)|define('USE_FULLEMAIL_FOR_LOGIN', true)|" \
+    -e "s|define('BACKEND_PROVIDER', '')|define('BACKEND_PROVIDER', 'BackendIMAP')|" \
+    -e "s|define('TIMEZONE', '')|define('TIMEZONE', '"$TIMEZONE"')|" /usr/local/lib/z-push/autodiscover/config.php.dist > /usr/local/lib/z-push/autodiscover/config.php
+    
 # si un fichier de config est present dans /config, alors on utilise celui la.
 [ -f "/config/config.php" ] && cat /config/config.php >> /usr/local/lib/z-push/config.php
 [ -f "/config/imap.php" ] && cat /config/imap.php >> /usr/local/lib/z-push/backend/imap/config.php
