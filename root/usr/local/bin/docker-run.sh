@@ -53,6 +53,7 @@ echo "*************************BEGIN* config.php *BEGIN*************************
 echo "==============================================================================="
 #cat /usr/local/lib/z-push/config.php
 grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/config.php" | \
+grep -vE "^\s*//" | \
 sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
 sed -E "s/[\"']//g"
 echo "***************************END* config.php *END********************************"
@@ -62,6 +63,7 @@ echo "*************************BEGIN* imap.php *BEGIN***************************
 echo "==============================================================================="
 #cat /usr/local/lib/z-push/backend/imap/config.php
 grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/backend/imap/config.php" | \
+grep -vE "^\s*//" | \
 sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
 sed -E "s/[\"']//g"
 echo "***************************END* imap.php *END********************************"
@@ -71,6 +73,7 @@ echo "***********************BEGIN* autodiscovery *BEGIN************************
 echo "==============================================================================="
 #cat /usr/local/lib/z-push/autodiscover/config.php
 grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/autodiscover/config.php" | \
+grep -vE "^\s*//" | \
 sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
 sed -E "s/[\"']//g"
 echo "*************************END* autodiscovery *END******************************"
