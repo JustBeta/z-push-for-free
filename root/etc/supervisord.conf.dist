@@ -1,6 +1,5 @@
 [supervisord]
 nodaemon=true
-user=zpush
 
 [program:php-fpm]
 command=/usr/local/sbin/php-fpm -F
