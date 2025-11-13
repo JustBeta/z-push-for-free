@@ -59,13 +59,19 @@ echo -e "/var/log/z-push/z-push.log\n{\n  compress\n  copytruncate\n  delaycompr
 
 echo "*************************BEGIN* config.php *BEGIN******************************"
 echo "==============================================================================="
-cat /usr/local/lib/z-push/config.php
+#cat /usr/local/lib/z-push/config.php
+grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/config.php" | \
+sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
+sed -E "s/[\"']//g"
 echo "***************************END* config.php *END********************************"
 echo "==============================================================================="
 
 echo "*************************BEGIN* imap.php *BEGIN******************************"
 echo "==============================================================================="
 cat /usr/local/lib/z-push/backend/imap/config.php
+grep -E "define\('.*?',\s*.*?\);" "/usr/local/lib/z-push/backend/imap/config.php" | \
+sed -E "s/define\('([^']+)',\s*(.*?)\);/\1=\2/" | \
+sed -E "s/[\"']//g"
 echo "***************************END* imap.php *END********************************"
 echo "==============================================================================="
 
