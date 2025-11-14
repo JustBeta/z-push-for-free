@@ -80,6 +80,8 @@ done < "$fichier"
 insertion=$(cat <<'EOF'
         $local_domain = 'DOMAIN_PERSO';
         $provider_domain = 'DOMAIN_ISP';
+        $local_domain = 'DOMAIN_PERSO';
+        $provider_domain = 'DOMAIN_ISP';
         $pattern = '/(<EMailAddress>[^@<]+)@' . preg_quote($local_domain, '/') . '(<\/EMailAddress>)/i';
         $replacement = '${1}@' . $provider_domain . '${2}';
         $input = preg_replace($pattern, $replacement, $input);
