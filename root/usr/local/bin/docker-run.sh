@@ -35,12 +35,48 @@ sed -e "s/define('IMAP_SERVER', 'localhost')/define('IMAP_SERVER', '"$IMAP_SERVE
     -e "s|imap_smtp_params = array()|imap_smtp_params = array('host' => '"$SMTP_SERVER"', 'port' => '"$SMTP_PORT"')|" \
     -e "s/define('IMAP_FOLDER_CONFIGURED', false)/define('IMAP_FOLDER_CONFIGURED', true)/" /usr/local/lib/z-push/backend/imap/config.php.dist > /usr/local/lib/z-push/backend/imap/config.php
 
-# parametrage de l'autoddiscover
+# parametrage de l'autodiscover
 sed -e "s/\/\/ define('ZPUSH_HOST', 'zpush.example.com')/define('ZPUSH_HOST', '"$ZPUSH_HOST"')/" \
     -e "s|define('USE_FULLEMAIL_FOR_LOGIN', false)|define('USE_FULLEMAIL_FOR_LOGIN', true)|" \
     -e "s|define('BACKEND_PROVIDER', '')|define('BACKEND_PROVIDER', 'BackendIMAP')|" \
     -e "s|define('TIMEZONE', '')|define('TIMEZONE', '"$TIMEZONE"')|" /usr/local/lib/z-push/autodiscover/config.php.dist > /usr/local/lib/z-push/autodiscover/config.php
-    
+
+# ajout d'une fonction pour mettre le bon domaine de messagerie
+fichier="/usr/local/lib/z-push/autodiscover/autodiscover.php.dist"
+temp="/usr/local/lib/z-push/autodiscover/autodiscover.php"
+insertion=$(cat <<'EOF'
+$local_domain = $DOMAIN_PERSO;
+$provider_domain = $DOMAIN_ISP;
+
+error_log("=== DUMP COMPLET DE LA REQUÊTE ===", 3, "/var/log/z-push/variables.log");
+error_log("SERVER : " . print_r($_SERVER, true), 3, "/var/log/z-push/variables.log");
+error_log("GET : " . print_r($_GET, true), 3, "/var/log/z-push/variables.log");
+error_log("POST : " . print_r($_POST, true), 3, "/var/log/z-push/variables.log");
+error_log("INPUT : " . file_get_contents('php://input'), 3, "/var/log/z-push/variables.log");
+
+if (isset($_SERVER['PHP_AUTH_USER'])) {
+    error_log("=== DUMP PARTIEL DE LA REQUÊTE ===", 3, "/var/log/z-push/variables.log");
+    $original_user = $_SERVER['PHP_AUTH_USER'];
+    error_log("Authentification reçue : $original_user", 3, "/var/log/z-push/variables.log");
+    error_log("password reçue : $_SERVER['PHP_AUTH_PW']", 3, "/var/log/z-push/variables.log");
+
+    if (preg_match('/@' . preg_quote($local_domain, '/') . '$/i', $original_user)) {
+        $converted_user = preg_replace('/@' . preg_quote($local_domain, '/') . '$/i', '@' . $provider_domain, $original_user);
+        $_SERVER['PHP_AUTH_USER'] = $converted_user;
+        error_log("Adresse convertie pour authentification : $converted_user", 3, "/var/log/z-push/variables.log");
+    }
+}
+EOF
+)
+
+# Traitement ligne par ligne
+while IFS= read -r ligne; do
+    if [[ "$ligne" == "require_once '../vendor/autoload.php';" ]]; then
+        echo "$insertion" >> "$temp"
+    fi
+    echo "$ligne" >> "$temp"
+done < "$fichier"
+
 # si un fichier de config est present dans /config, alors on utilise celui la.
 [ -f "/config/config.php" ] && cat /config/config.php >> /usr/local/lib/z-push/config.php
 [ -f "/config/imap.php" ] && cat /config/imap.php >> /usr/local/lib/z-push/backend/imap/config.php
