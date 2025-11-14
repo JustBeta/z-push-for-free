@@ -63,13 +63,13 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
 EOF
 )
 
-# Traitement ligne par ligne
-while IFS= read -r ligne; do
-    if [[ "$ligne" == "require_once '../vendor/autoload.php';" ]]; then
-        echo "$insertion" >> "$temp1"
-    fi
-    echo "$ligne" >> "$temp1"
-done < "$fichier"
+## Traitement ligne par ligne
+#while IFS= read -r ligne; do
+#    if [[ "$ligne" == "require_once '../vendor/autoload.php';" ]]; then
+#        echo "$insertion" >> "$temp1"
+#    fi
+#    echo "$ligne" >> "$temp1"
+#done < "$fichier"
 
 insertion=$(cat <<'EOF'
         $local_domain = 'DOMAIN_PERSO';
@@ -81,18 +81,19 @@ insertion=$(cat <<'EOF'
 
 EOF
 )
-# Traitement ligne par ligne
-while IFS= read -r ligne; do
-    if [[ "$ligne" == '        $xml = simplexml_load_string($input);' ]]; then
-        echo "$insertion" >> "$temp2"
-    fi
-    echo "$ligne" >> "$temp2"
-done < "$temp1"
+## Traitement ligne par ligne
+#while IFS= read -r ligne; do
+#    if [[ "$ligne" == '        $xml = simplexml_load_string($input);' ]]; then
+#        echo "$insertion" >> "$temp2"
+#    fi
+#    echo "$ligne" >> "$temp2"
+#done < "$temp1"
 
-sed -e "s/local_domain = 'DOMAIN_PERSO'/local_domain = $DOMAIN_PERSO/" \
-    -e "s|provider_domain = 'DOMAIN_ISP'|provider_domain = $DOMAIN_ISP|" /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp2 > /usr/local/lib/z-push/autodiscover/autodiscover.php
-rm /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp1
-rm /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp2
+#sed -e "s/local_domain = 'DOMAIN_PERSO'/local_domain = $DOMAIN_PERSO/" \
+#    -e "s|provider_domain = 'DOMAIN_ISP'|provider_domain = $DOMAIN_ISP|" /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp2 > /usr/local/lib/z-push/autodiscover/autodiscover.php
+#rm /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp1
+#rm /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp2
+cat /usr/local/lib/z-push/autodiscover/autodiscover.php.dist /usr/local/lib/z-push/autodiscover/autodiscover.php
 
 # si un fichier de config est present dans /config, alors on utilise celui la.
 [ -f "/config/config.php" ] && cat /config/config.php >> /usr/local/lib/z-push/config.php
