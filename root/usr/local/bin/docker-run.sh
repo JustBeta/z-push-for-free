@@ -48,7 +48,7 @@ insertion=$(cat <<'EOF'
 $local_domain = 'DOMAIN_PERSO';
 $provider_domain = 'DOMAIN_ISP';
 
-error_log("=== DUMP COMPLET DE LA REQUÊTE === . PHP_EOL", 3, "/var/log/z-push/variables.log");
+error_log("=== DUMP COMPLET DE LA REQUÊTE ===" . PHP_EOL, 3, "/var/log/z-push/variables.log");
 error_log("SERVER : " . print_r($_SERVER, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
 error_log("GET : " . print_r($_GET, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
 error_log("POST : " . print_r($_POST, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
