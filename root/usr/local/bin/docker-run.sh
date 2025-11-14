@@ -78,7 +78,7 @@ insertion=$(cat <<'EOF'
         $replacement = '${1}@' . $provider_domain . '${2}';
         $input = preg_replace($pattern, $replacement, $input);
         error_log("getIcommingXml : " . $input . PHP_EOL, 3, "/var/log/z-push/variables.log");
-        
+
 EOF
 )
 # Traitement ligne par ligne
