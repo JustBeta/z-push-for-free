@@ -45,8 +45,8 @@ sed -e "s/\/\/ define('ZPUSH_HOST', 'zpush.example.com')/define('ZPUSH_HOST', '"
 fichier="/usr/local/lib/z-push/autodiscover/autodiscover.php.dist"
 temp="/usr/local/lib/z-push/autodiscover/autodiscover.php"
 insertion=$(cat <<'EOF'
-$local_domain = $DOMAIN_PERSO;
-$provider_domain = $DOMAIN_ISP;
+$local_domain = 'DOMAIN_PERSO';
+$provider_domain = 'DOMAIN_ISP';
 
 error_log("=== DUMP COMPLET DE LA REQUÊTE ===", 3, "/var/log/z-push/variables.log");
 error_log("SERVER : " . print_r($_SERVER, true), 3, "/var/log/z-push/variables.log");
@@ -58,7 +58,7 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     error_log("=== DUMP PARTIEL DE LA REQUÊTE ===", 3, "/var/log/z-push/variables.log");
     $original_user = $_SERVER['PHP_AUTH_USER'];
     error_log("Authentification reçue : $original_user", 3, "/var/log/z-push/variables.log");
-    error_log("password reçue : $_SERVER['PHP_AUTH_PW']", 3, "/var/log/z-push/variables.log");
+    error_log("password reçue : " . $_SERVER['PHP_AUTH_PW'], 3, "/var/log/z-push/variables.log");
 
     if (preg_match('/@' . preg_quote($local_domain, '/') . '$/i', $original_user)) {
         $converted_user = preg_replace('/@' . preg_quote($local_domain, '/') . '$/i', '@' . $provider_domain, $original_user);
@@ -68,6 +68,8 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
 }
 EOF
 )
+sed -e "s/$local_domain = 'DOMAIN_PERSO';/$local_domain = '$DOMAIN_PERSO';/" \
+    -e "s|$provider_domain = 'DOMAIN_ISP';|$provider_domain = '$DOMAIN_ISP';|" /usr/local/lib/z-push/autodiscover/autodiscover.php > /usr/local/lib/z-push/autodiscover/autodiscover.php
 
 # Traitement ligne par ligne
 while IFS= read -r ligne; do
