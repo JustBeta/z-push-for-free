@@ -82,7 +82,7 @@ EOF
 )
 # Traitement ligne par ligne
 while IFS= read -r ligne; do
-    if [[ "$ligne" == "        $xml = simplexml_load_string($input);" ]]; then
+    if [[ "$ligne" == '        $xml = simplexml_load_string($input);' ]]; then
         echo "$insertion" >> "$temp"
     fi
     echo "$ligne" >> "$temp"
