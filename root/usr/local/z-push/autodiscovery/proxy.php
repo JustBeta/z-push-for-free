@@ -40,7 +40,7 @@ $opts = [
     ]
 ];
 $context = stream_context_create($opts);
-$response = file_get_contents('https://' . $_SERVER['HTTP_HOST'] . '/autodiscover/debug.php', false, $context);
+$response = file_get_contents('https://' . $_SERVER['HTTP_HOST'] . '/autodiscover/autodiscovery.php', false, $context);
 
 // 5. Renvoyer la réponse au client
 http_response_code(http_response_code());
