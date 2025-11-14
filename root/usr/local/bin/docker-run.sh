@@ -48,11 +48,11 @@ insertion=$(cat <<'EOF'
 $local_domain = 'DOMAIN_PERSO';
 $provider_domain = 'DOMAIN_ISP';
 
-error_log("=== DUMP COMPLET DE LA REQUÊTE ===", 3, "/var/log/z-push/variables.log");
-error_log("SERVER : " . print_r($_SERVER, true), 3, "/var/log/z-push/variables.log");
-error_log("GET : " . print_r($_GET, true), 3, "/var/log/z-push/variables.log");
-error_log("POST : " . print_r($_POST, true), 3, "/var/log/z-push/variables.log");
-error_log("INPUT : " . file_get_contents('php://input'), 3, "/var/log/z-push/variables.log");
+error_log("=== DUMP COMPLET DE LA REQUÊTE === . PHP_EOL", 3, "/var/log/z-push/variables.log");
+error_log("SERVER : " . print_r($_SERVER, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
+error_log("GET : " . print_r($_GET, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
+error_log("POST : " . print_r($_POST, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
+error_log("INPUT : " . file_get_contents('php://input') . PHP_EOL, 3, "/var/log/z-push/variables.log");
 
 if (isset($_SERVER['PHP_AUTH_USER'])) {
     error_log("=== DUMP PARTIEL DE LA REQUÊTE ===" . PHP_EOL, 3, "/var/log/z-push/variables.log");
