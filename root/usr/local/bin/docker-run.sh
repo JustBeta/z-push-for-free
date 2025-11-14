@@ -56,7 +56,7 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
         $converted_user = preg_replace('/@' . preg_quote($local_domain, '/') . '$/i', '@' . $provider_domain, $original_user);
         $_SERVER['PHP_AUTH_USER'] = $converted_user;
     }
-    error_log("Authentification reçue : $_SERVER['PHP_AUTH_USER']" . PHP_EOL, 3, "/var/log/z-push/variables.log");
+    error_log("Authentification reçue : " . $_SERVER['PHP_AUTH_USER'] . PHP_EOL, 3, "/var/log/z-push/variables.log");
     error_log("password reçue : " . $_SERVER['PHP_AUTH_PW'] . PHP_EOL, 3, "/var/log/z-push/variables.log");
 }
 
