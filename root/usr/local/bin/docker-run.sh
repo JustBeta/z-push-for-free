@@ -77,6 +77,22 @@ while IFS= read -r ligne; do
     echo "$ligne" >> "$temp"
 done < "$fichier"
 
+insertion=$(cat <<'EOF'
+        $local_domain = 'DOMAIN_PERSO';
+        $provider_domain = 'DOMAIN_ISP';
+        $pattern = '/(<EMailAddress>[^@<]+)@' . preg_quote($local_domain, '/') . '(<\/EMailAddress>)/i';
+        $replacement = '${1}@' . $provider_domain . '${2}';
+        $input = preg_replace($pattern, $replacement, $input);
+EOF
+)
+# Traitement ligne par ligne
+while IFS= read -r ligne; do
+    if [[ "$ligne" == "        $xml = simplexml_load_string($input);" ]]; then
+        echo "$insertion" >> "$temp"
+    fi
+    echo "$ligne" >> "$temp"
+done < "$fichier"
+
 sed -e "s/local_domain = 'DOMAIN_PERSO'/local_domain = $DOMAIN_PERSO/" \
     -e "s|provider_domain = 'DOMAIN_ISP'|provider_domain = $DOMAIN_ISP|" /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp > /usr/local/lib/z-push/autodiscover/autodiscover.php
 rm /usr/local/lib/z-push/autodiscover/autodiscover.php.tmp
