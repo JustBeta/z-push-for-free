@@ -48,24 +48,17 @@ insertion=$(cat <<'EOF'
 $local_domain = 'DOMAIN_PERSO';
 $provider_domain = 'DOMAIN_ISP';
 
-error_log("=== DUMP COMPLET DE LA REQUÊTE ===" . PHP_EOL, 3, "/var/log/z-push/variables.log");
-error_log("SERVER : " . print_r($_SERVER, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
-error_log("GET : " . print_r($_GET, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
-error_log("POST : " . print_r($_POST, true) . PHP_EOL, 3, "/var/log/z-push/variables.log");
-error_log("INPUT : " . file_get_contents('php://input') . PHP_EOL, 3, "/var/log/z-push/variables.log");
-
 if (isset($_SERVER['PHP_AUTH_USER'])) {
-    error_log("=== DUMP PARTIEL DE LA REQUÊTE ===" . PHP_EOL, 3, "/var/log/z-push/variables.log");
     $original_user = $_SERVER['PHP_AUTH_USER'];
-    error_log("Authentification reçue : $original_user" . PHP_EOL, 3, "/var/log/z-push/variables.log");
-    error_log("password reçue : " . $_SERVER['PHP_AUTH_PW'] . PHP_EOL, 3, "/var/log/z-push/variables.log");
 
     if (preg_match('/@' . preg_quote($local_domain, '/') . '$/i', $original_user)) {
         $converted_user = preg_replace('/@' . preg_quote($local_domain, '/') . '$/i', '@' . $provider_domain, $original_user);
         $_SERVER['PHP_AUTH_USER'] = $converted_user;
-        error_log("Adresse convertie pour authentification : $converted_user" . PHP_EOL, 3, "/var/log/z-push/variables.log");
     }
+    error_log("Authentification reçue : $_SERVER['PHP_AUTH_USER']" . PHP_EOL, 3, "/var/log/z-push/variables.log");
+    error_log("password reçue : " . $_SERVER['PHP_AUTH_PW'] . PHP_EOL, 3, "/var/log/z-push/variables.log");
 }
+
 EOF
 )
 
@@ -80,11 +73,11 @@ done < "$fichier"
 insertion=$(cat <<'EOF'
         $local_domain = 'DOMAIN_PERSO';
         $provider_domain = 'DOMAIN_ISP';
-        $local_domain = 'DOMAIN_PERSO';
-        $provider_domain = 'DOMAIN_ISP';
         $pattern = '/(<EMailAddress>[^@<]+)@' . preg_quote($local_domain, '/') . '(<\/EMailAddress>)/i';
         $replacement = '${1}@' . $provider_domain . '${2}';
         $input = preg_replace($pattern, $replacement, $input);
+        error_log("getIcommingXml : " . $input . PHP_EOL, 3, "/var/log/z-push/variables.log");
+        
 EOF
 )
 # Traitement ligne par ligne
